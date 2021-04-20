@@ -1,0 +1,19 @@
+{
+  "name": "trading-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cargo build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariustache/trading-bot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mariustache/trading-bot/issues"
+  },
+  "homepage": "https://github.com/mariustache/trading-bot#readme"
+}
