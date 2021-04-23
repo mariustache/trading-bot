@@ -1,0 +1,32 @@
+---
+metadata:
+  endpoint: https://api.binance.com/
+  test_endpoint: https://testnet.binance.vision
+
+endpoints:
+  wallet:
+    - system_status:
+      type: GET
+      value: /sapi/v1/system/status
+      signature: No
+    - coins_info: 
+      type: GET
+      value: /sapi/v1/capital/config/getall
+      signature: Yes
+      weight: 1
+      parameters:
+        - { name: recvWindow, type: LONG, mandatory: No }
+        - { name: timestamp, type: LONG, mandatory: Yes }
+    - account_snapshot: 
+      type: GET
+      value: /sapi/v1/accountSnapshot
+      signature: Yes
+      weight: 1
+      parameters:
+        - { name: type, type: STRING, mandatory: Yes }
+        - { name: startTime, type: LONG, mandatory: No }
+        - { name: endTime, type: LONG, mandatory: No }
+        - { name: limit, type: INT, mandatory: No }
+        - { name: recvWindow, type: LONG, mandatory: No }
+        - { name: timestamp, type: LONG, mandatory: Yes }
+...
