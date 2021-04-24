@@ -1,17 +1,8 @@
-use reqwest;
-use tokio;
+mod protos;
+use protos::wallet::Request;
 
-#[tokio::main]
-async fn main() -> Result<(), reqwest::Error> {
-    let binance_testnet = String::from("https://testnet.binance.vision");
-    let endpoint = String::from("/api/v3/exchangeInfo");
-    let payload = binance_testnet + &endpoint;
-    println!("{:?}", payload);
-    let mut res = reqwest::get(&payload)
-        .await?
-        .text()
-        .await?;
-    println!("{:?}", res);
-
-    Ok(())
+fn main() {
+    let mut request = Request::new();
+    request.set_field_type("GET".to_string());
+    request.set_endpoint("/sapi/v1/system/status".to_string());
 }
