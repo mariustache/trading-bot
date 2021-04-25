@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "common.proto";
+
+/**
+ * Request for fetching system status.
+*/
+message SystemStatusRequest {
+  RequestHeader header = 1;
+}
+
+/**
+ * System status response.
+*/
+message SystemStatusResponse {
+  enum Status {
+    NORMAL = 0;
+    MAINTENANCE = 1;
+    NOT_FOUND = 2;
+  }
+  Status status = 1; // 0: normal，1：system maintenance
+  string msg = 2; // normal|system maintenance
+}
