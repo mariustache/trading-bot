@@ -6,7 +6,7 @@ syntax = "proto3";
 enum EndpointSecurityType {
   NONE = 0; // Endpoint can be accessed freely.
   SIGNED = 1; // Endpoint requires sending a valid API-Key and signature.
-  ONLY_KEY = 5; // Endpoint requires sending a valid API-Key.
+  ONLY_KEY = 2; // Endpoint requires sending a valid API-Key.
 }
 
 /**
@@ -16,7 +16,7 @@ message RequestHeader {
   string type = 1; // HTTP request type: GET, POST, PUT, DELETE
   string endpoint = 2; // Endpoint request is sent to.
   EndpointSecurityType securityType = 3; // Security type.
-  
+  uint64 weight = 4; // Request weight.
 }
 
 /**

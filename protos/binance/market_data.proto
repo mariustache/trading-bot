@@ -8,3 +8,10 @@ import "common.proto";
 message TestConnectivityRequest {
     RequestHeader header = 1;
 }
+
+/**
+ * Check server time.
+*/
+message ServerTimeRequest {
+    RequestHeader header = 1;
+}
