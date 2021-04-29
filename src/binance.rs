@@ -15,13 +15,17 @@ impl BinanceFeed {
     pub fn new() -> BinanceFeed {
         BinanceFeed {
             loader: ConfigLoader {
-                filename: String::from("")
+                filename: String::from(""),
+                config: vec![]
             }
         }
     }
 
     pub fn init(mut self) {
-        self.loader = ConfigLoader{ filename: String::from(BINANCE_YAML) };
+        self.loader = ConfigLoader{ 
+            filename: String::from(BINANCE_YAML) ,
+            config: vec![]
+        };
         self.loader.load();
     }
 }

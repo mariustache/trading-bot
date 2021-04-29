@@ -1,19 +1,21 @@
 extern crate yaml_rust;
 
-use yaml_rust::YamlLoader;
+use yaml_rust::{Yaml, YamlLoader};
 use std::path::Path;
+use std::fs;
 
 pub struct ConfigLoader {
-    pub filename: String
+    pub filename: String,
+    pub config: Vec<Yaml>
 }
 
 impl ConfigLoader {
-    pub fn load(&self) -> bool {
+    pub fn load(mut self) {
         let path = Path::new(&self.filename);
+        assert_eq!(path.exists(), true);
         let path = path.to_str().unwrap_or("Error");
-        let config = YamlLoader::load_from_str(path).unwrap();
-        println!("{:?}", config[0]);
-
-        true
+        let contents = fs::read_to_string(path)
+            .expect("Error reading contents from yaml file.");
+        self.config = YamlLoader::load_from_str(&contents).unwrap();
     }
 }
