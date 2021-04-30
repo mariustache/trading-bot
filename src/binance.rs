@@ -12,30 +12,24 @@ pub struct BinanceFeed {
 }
 
 impl BinanceFeed {
-    pub fn new() -> BinanceFeed {
-        BinanceFeed {
-            loader: ConfigLoader {
-                filename: String::from(""),
-                config: vec![]
-            }
-        }
-    }
-
-    pub fn init(mut self) {
-        self.loader = ConfigLoader{ 
-            filename: String::from(BINANCE_YAML) ,
+    pub fn new() -> Box<dyn ApiFeed> {
+        let mut loader = ConfigLoader {
+            filename: String::from(BINANCE_YAML),
             config: vec![]
         };
-        self.loader.load();
+        loader.load();
+        Box::new(BinanceFeed{ loader })
     }
 }
 
 impl ApiFeed for BinanceFeed {
-    fn system_status() -> bool {
+    fn system_status(&self) -> bool {
+        let endpoint = self.loader.get_endpoint("system_status");
+        println!("{:?}", endpoint);
         true
     }
 
-    fn wallet_info() -> WalletInfo {
+    fn wallet_info(&self) -> WalletInfo {
         WalletInfo {
             coins: HashMap::new()
         }

@@ -5,6 +5,6 @@ pub struct WalletInfo {
 }
 
 pub trait ApiFeed {
-    fn system_status() -> bool;
-    fn wallet_info() -> WalletInfo;
+    fn system_status(&self) -> bool;
+    fn wallet_info(&self) -> WalletInfo;
 }
