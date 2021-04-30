@@ -18,14 +18,18 @@ impl BinanceFeed {
             config: vec![]
         };
         loader.load();
-        Box::new(BinanceFeed{ loader })
+        Box::new(BinanceFeed{ 
+            loader
+        })
     }
 }
 
 impl ApiFeed for BinanceFeed {
     fn system_status(&self) -> bool {
         let endpoint = self.loader.get_endpoint("system_status");
-        println!("{:?}", endpoint);
+        let base = self.loader.get_metadata("test_endpoint");
+        println!("{}{}", base, endpoint);
+
         true
     }
 

@@ -15,7 +15,8 @@ impl ConfigLoader {
         let path = path.to_str().unwrap_or("Error");
         let contents = fs::read_to_string(path)
             .expect("Error reading contents from yaml file.");
-        self.config = YamlLoader::load_from_str(&contents).unwrap();
+        let contents = YamlLoader::load_from_str(&contents).unwrap();
+        self.config = contents;
     }
 
     pub fn get_endpoint(&self, key: &str) -> &str {
@@ -23,5 +24,12 @@ impl ConfigLoader {
         let endpoint = &endpoints[key]["value"];
 
         endpoint.as_str().unwrap()
+    }
+
+    pub fn get_metadata(&self, key: &str) -> &str {
+        let metadata = &self.config[0]["metadata"];
+        let metadata = &metadata[key];
+
+        metadata.as_str().unwrap()
     }
 }
