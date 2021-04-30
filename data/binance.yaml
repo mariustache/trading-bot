@@ -5,36 +5,33 @@ metadata:
 
 endpoints:
     system_status:
-      type: GET
-      value: /sapi/v1/system/status
-      security_type: NONE
-      weight: 1
-      class: SystemStatusRequest
+      method: GET
+      endpoint: /sapi/v1/system/status
+      security: NONE
+      weight: "1"
 
     coins_info: 
-      type: GET
-      value: /sapi/v1/capital/config/getall
-      security_type: SIGNED
-      weight: 1
+      method: GET
+      endpoint: /sapi/v1/capital/config/getall
+      security: SIGNED
+      weight: "1"
     
     account_snapshot: 
-      type: GET
-      value: /sapi/v1/accountSnapshot
-      security_type: SIGNED
-      weight: 1 
+      method: GET
+      endpoint: /sapi/v1/accountSnapshot
+      security: SIGNED
+      weight: "1" 
   
     test_connectivity:
-      type: GET
-      value: /api/v3/ping
-      security_type: NONE
-      weight: 1
-      class: TestConnectivityRequest
+      method: GET
+      endpoint: /api/v3/ping
+      security: NONE
+      weight: "1"
 
     test_connectivity:
-      type: GET
-      value: /api/v3/time
-      security_type: NONE
-      weight: 1
-      class: ServerTimeRequest
+      method: GET
+      endpoint: /api/v3/time
+      security: NONE
+      weight: "1"
   
 ...

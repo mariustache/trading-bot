@@ -1,9 +1,6 @@
 extern crate common;
-
-use common::api_feed::{ApiFeed, WalletInfo};
+use common::api_feed::{ApiFeed, ApiRequest};
 use common::config::ConfigLoader;
-
-use std::collections::HashMap;
 
 const BINANCE_YAML: &str = "./data/binance.yaml";
 
@@ -25,17 +22,15 @@ impl BinanceFeed {
 }
 
 impl ApiFeed for BinanceFeed {
-    fn system_status(&self) -> bool {
-        let endpoint = self.loader.get_endpoint("system_status");
-        let base = self.loader.get_metadata("test_endpoint");
-        println!("{}{}", base, endpoint);
-
-        true
+    fn get_endpoint(&self, key: &str) -> ApiRequest {
+        self.loader.get_endpoint(key)
     }
 
-    fn wallet_info(&self) -> WalletInfo {
-        WalletInfo {
-            coins: HashMap::new()
-        }
+    fn system_status(&self) -> ApiRequest {
+        self.get_endpoint("system_status")
+    }
+
+    fn coins_info(&self) -> ApiRequest {
+        self.get_endpoint("coins_info")
     }
 }
