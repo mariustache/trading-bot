@@ -4,35 +4,33 @@ metadata:
   test_endpoint: https://testnet.binance.vision
 
 endpoints:
-  wallet:
-    - system_status:
+    system_status:
       type: GET
       value: /sapi/v1/system/status
       security_type: NONE
       weight: 1
       class: SystemStatusRequest
 
-    - coins_info: 
+    coins_info: 
       type: GET
       value: /sapi/v1/capital/config/getall
       security_type: SIGNED
       weight: 1
     
-    - account_snapshot: 
+    account_snapshot: 
       type: GET
       value: /sapi/v1/accountSnapshot
       security_type: SIGNED
       weight: 1 
   
-  market_data:
-    - test_connectivity:
+    test_connectivity:
       type: GET
       value: /api/v3/ping
       security_type: NONE
       weight: 1
       class: TestConnectivityRequest
 
-    - test_connectivity:
+    test_connectivity:
       type: GET
       value: /api/v3/time
       security_type: NONE
