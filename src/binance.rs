@@ -22,15 +22,11 @@ impl BinanceFeed {
 }
 
 impl ApiFeed for BinanceFeed {
-    fn get_endpoint(&self, key: &str) -> ApiRequest {
-        self.loader.get_endpoint(key)
-    }
-
     fn system_status(&self) -> ApiRequest {
-        self.get_endpoint("system_status")
+        self.loader.get_endpoint("system_status")
     }
 
     fn coins_info(&self) -> ApiRequest {
-        self.get_endpoint("coins_info")
+        self.loader.get_endpoint("coins_info")
     }
 }

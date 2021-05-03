@@ -26,7 +26,6 @@ impl fmt::Debug for ApiRequest {
 }
 
 pub trait ApiFeed {
-    fn get_endpoint(&self, key: &str) -> ApiRequest;
     fn system_status(&self) -> ApiRequest;
     fn coins_info(&self) -> ApiRequest;
 }
