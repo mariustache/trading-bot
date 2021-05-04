@@ -1,5 +1,5 @@
-#[macro_use]
-extern crate dotenv_codegen;
+extern crate dotenv;
+use dotenv::dotenv;
 
 mod binance;
 use binance::BinanceFeed;
@@ -9,12 +9,13 @@ use client::HttpClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok();
+
     let feed = BinanceFeed::new();
     println!("{:?}", feed.system_status());
     println!("{:?}", feed.coins_info());
     let client = HttpClient::new();
     let res = client.send(feed.system_status()).await?;
-    println!("{}", dotenv!("BINANCE_TESTNET_API_SECRET"));
     println!("{:?}", res.text().await?);
     let binance_feed: &BinanceFeed = 
         match feed.as_any().downcast_ref::<BinanceFeed>() {
