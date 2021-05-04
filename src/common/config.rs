@@ -6,11 +6,10 @@ use crate::api_feed::{ApiRequest, SecurityType};
 use std::path::Path;
 use std::fs;
 
-const ON_TESTNET: bool = true;
-
 pub struct ConfigLoader {
     pub filename: String,
-    pub config: Vec<Yaml>
+    pub config: Vec<Yaml>,
+    pub on_testnet: bool
 }
 
 impl ConfigLoader {
@@ -34,7 +33,7 @@ impl ConfigLoader {
 
         let method = extract(&element["method"]);
         
-        let mut endpoint = match ON_TESTNET {
+        let mut endpoint = match self.on_testnet {
             true => self.get_metadata("test_endpoint"),
             false => self.get_metadata("endpoint")
         };
@@ -56,7 +55,6 @@ impl ConfigLoader {
             endpoint,
             weight,
             security
-
         }
     }
 

@@ -1,4 +1,5 @@
 use std::fmt;
+use std::any::Any;
 
 #[derive(Debug)]
 pub enum SecurityType {
@@ -26,6 +27,9 @@ impl fmt::Debug for ApiRequest {
 }
 
 pub trait ApiFeed {
+    fn as_any(&self) -> &dyn Any;
+    fn secret_key(&self) -> String;
+    fn public_key(&self) -> String;
     fn system_status(&self) -> ApiRequest;
     fn coins_info(&self) -> ApiRequest;
 }

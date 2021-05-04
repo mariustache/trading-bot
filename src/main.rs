@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate dotenv_codegen;
+
 mod binance;
 use binance::BinanceFeed;
 
@@ -11,6 +14,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{:?}", feed.coins_info());
     let client = HttpClient::new();
     let res = client.send(feed.system_status()).await?;
-    println!("{:?}", res);
+    println!("{}", dotenv!("BINANCE_TESTNET_API_SECRET"));
+    println!("{:?}", res.text().await?);
+    let binance_feed: &BinanceFeed = 
+        match feed.as_any().downcast_ref::<BinanceFeed>() {
+            Some(b) => b,
+            None => panic!("Cannot downcast to BinanceFeed.")
+    };
+    println!("{:?}", binance_feed.on_testnet());
     Ok(())
 }
