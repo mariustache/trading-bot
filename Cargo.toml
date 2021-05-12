@@ -10,6 +10,7 @@ dotenv_codegen = "0.15.0"
 reqwest = "0.11"
 tokio = { version = "1", features = ["full"] }
 yaml-rust = "0.4.5"
+linked-hash-map = "0.5.4"
 
 [lib]
 name = "common"

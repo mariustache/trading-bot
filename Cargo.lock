@@ -910,6 +910,7 @@ version = "0.1.0"
 dependencies = [
  "dotenv",
  "dotenv_codegen",
+ "linked-hash-map",
  "reqwest",
  "tokio",
  "yaml-rust",

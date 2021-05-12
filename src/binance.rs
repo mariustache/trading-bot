@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::collections::HashMap;
 extern crate common;
 use common::api_feed::{ApiFeed, ApiRequest};
 use common::config::ConfigLoader;
@@ -17,8 +18,8 @@ impl BinanceFeed {
         let on_testnet = get_env("ON_TESTNET") == "true";
         let mut loader = ConfigLoader {
             filename: String::from(BINANCE_YAML),
-            config: vec![],
-            on_testnet
+            on_testnet,
+            requests: HashMap::new()
         };
         loader.load();
         Box::new(BinanceFeed{ 
@@ -38,6 +39,12 @@ impl BinanceFeed {
     pub fn on_testnet(&self) -> bool {
         self.loader.on_testnet
     }
+
+    pub fn print_requests(&self) {
+        for request in &self.loader.requests {
+            println!("{:?}", request);
+        }
+    }
 }
 
 impl ApiFeed for BinanceFeed {
@@ -45,11 +52,11 @@ impl ApiFeed for BinanceFeed {
         self
     }
     
-    fn system_status(&self) -> ApiRequest {
+    fn system_status(&self) -> &ApiRequest {
         self.loader.get_endpoint("system_status")
     }
 
-    fn coins_info(&self) -> ApiRequest {
+    fn coins_info(&self) -> &ApiRequest {
         self.loader.get_endpoint("coins_info")
     }
 }

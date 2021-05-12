@@ -23,5 +23,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             None => panic!("Cannot downcast to BinanceFeed.")
     };
     println!("{:?}", binance_feed.on_testnet());
+    binance_feed.print_requests();
     Ok(())
 }

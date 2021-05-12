@@ -12,9 +12,9 @@ impl HttpClient {
         }
     }
 
-    pub async fn send(&self, req: ApiRequest) 
+    pub async fn send(&self, req: &ApiRequest) 
     -> Result<reqwest::Response, Box<dyn std::error::Error>> {
-        let res = self.client.get(req.endpoint)
+        let res = self.client.get(&req.url)
             .send()
             .await?;
         
