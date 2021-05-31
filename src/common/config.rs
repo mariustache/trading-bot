@@ -1,11 +1,11 @@
 extern crate yaml_rust;
 use yaml_rust::{Yaml, YamlLoader};
-use linked_hash_map::LinkedHashMap;
-use crate::api_feed::{ApiRequest, SecurityType, ParameterType, EndpointParamsMap};
+use crate::api_feed::{ApiRequest, SecurityType, EndpointParams};
 
 use std::path::Path;
 use std::fs;
 use std::collections::HashMap;
+use log::{info, debug};
 
 type ApiRequests = HashMap<String, ApiRequest>;
 
@@ -26,6 +26,7 @@ impl ConfigLoader {
         let path = path.to_str().unwrap();
         let contents = fs::read_to_string(path)
             .expect("Error reading contents from yaml file.");
+        info!("Loading data from {}.", &self.filename);
         let contents = YamlLoader::load_from_str(&contents).unwrap();
 
         // Extract base url for endpoints.
@@ -38,7 +39,7 @@ impl ConfigLoader {
         // Create ApiRequest instances.
         let endpoints = &contents[0]["endpoints"].as_hash().unwrap();
         for (endpoint, value) in *endpoints {
-            println!("{:?}", endpoint);
+            debug!("{:?}", endpoint);
             // Extract endpoint request type.
             let method = extract(&value["method"]);
             // Extract and append endpoint to base url.
@@ -55,23 +56,22 @@ impl ConfigLoader {
     
             };
             // Extract endpoint parameters.
-            let mut param_map = EndpointParamsMap::new();
+            let mut param_map = EndpointParams::new();
             match &value["parameters"].as_hash() {
                 Some(parameters) => {
                     for (param, value) in *parameters {
                         let param_type = match extract(&value).as_str() {
-                            "STRING" => ParameterType::STRING,
-                            "INT" => ParameterType::INT,
-                            _ => ParameterType::INVALID
+                            "STRING" => "",
+                            "INT" => "0",
+                            _ => ""
                         };
-                        param_map.insert(
-                            extract(&param),
-                            param_type
+                        param_map.push(
+                            (extract(&param), String::from(param_type))
                         );
                     }
                 },
                 None =>  {
-                    println!("Found NONE on yaml: {:?}", &value);
+                    debug!("Found NONE on yaml: {:?}", &value["endpoint"]);
                 }
             };            
             
@@ -82,14 +82,14 @@ impl ConfigLoader {
                     url,
                     weight,
                     security,
-                    parameters: param_map
+                    parameters: param_map,
                 }
             );
         }
         
     }
 
-    pub fn get_endpoint(&self, key: &str) -> &ApiRequest {
-        &self.requests[key]
+    pub fn get_endpoint(&self, key: &str) -> ApiRequest {
+        self.requests[key].clone()
     }
 }

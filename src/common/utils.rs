@@ -10,3 +10,7 @@ pub fn get_env(key: &str) -> String {
     };
     value
 }
+
+pub fn sign(secret: &str, payload: &str) -> String {
+    String::from("")
+}

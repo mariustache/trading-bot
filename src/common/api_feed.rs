@@ -1,8 +1,7 @@
 use std::fmt;
 use std::any::Any;
-use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum SecurityType {
     NONE = 0,
     APIKEY,
@@ -10,21 +9,36 @@ pub enum SecurityType {
     INVALID
 }
 
-#[derive(Debug)]
-pub enum ParameterType {
-    STRING = 0,
-    INT,
-    INVALID
-}
+pub type EndpointParams = Vec<(String, String)>;
 
-pub type EndpointParamsMap = HashMap<String, ParameterType>;
-
+#[derive(Clone)]
 pub struct ApiRequest {
     pub method: String,
     pub url: String,
     pub weight: u32,
     pub security: SecurityType,
-    pub parameters: EndpointParamsMap
+    pub parameters: EndpointParams,
+}
+
+impl ApiRequest {
+    pub fn add_param(&mut self, name: String, value: String) {
+        self.parameters.push((name, value));
+    }
+
+    pub fn get_param_payload(&self) -> String {
+        let mut payload = String::from(&self.url);
+        let mut param_str: Vec<String> = Vec::new();
+        // Add parameters to payload.
+        if !self.parameters.is_empty() {
+            payload.push_str("?");
+            for (param, value) in &self.parameters {
+                param_str.push(format!("{}={}", param, value));
+            }
+            payload = payload + &param_str.join("&");
+        }
+
+        payload
+    }
 }
 
 impl fmt::Debug for ApiRequest {
@@ -40,6 +54,7 @@ impl fmt::Debug for ApiRequest {
 
 pub trait ApiFeed {
     fn as_any(&self) -> &dyn Any;
-    fn system_status(&self) -> &ApiRequest;
-    fn coins_info(&self) -> &ApiRequest;
+    fn system_status(&self) -> String;
+    fn coins_info(&self) -> String;
+    fn depth(&self) -> String;
 }

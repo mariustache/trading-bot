@@ -34,7 +34,7 @@ endpoints:
     
     depth:
       method: GET
-      endpoint: /api/v3/ping
+      endpoint: /api/v3/depth
       security: NONE
       weight: "1"
       parameters:

@@ -1,7 +1,10 @@
 use std::any::Any;
 use std::collections::HashMap;
+
+use log::{info};
+
 extern crate common;
-use common::api_feed::{ApiFeed, ApiRequest};
+use common::api_feed::ApiFeed;
 use common::config::ConfigLoader;
 use common::utils::get_env;
 
@@ -16,6 +19,7 @@ pub struct BinanceFeed {
 impl BinanceFeed {
     pub fn new() -> Box<dyn ApiFeed> {
         let on_testnet = get_env("ON_TESTNET") == "true";
+        info!("Creating Binance feed. On testnet: {}", &on_testnet);
         let mut loader = ConfigLoader {
             filename: String::from(BINANCE_YAML),
             on_testnet,
@@ -36,10 +40,6 @@ impl BinanceFeed {
         })
     }
 
-    pub fn on_testnet(&self) -> bool {
-        self.loader.on_testnet
-    }
-
     pub fn print_requests(&self) {
         for request in &self.loader.requests {
             println!("{:?}", request);
@@ -52,11 +52,21 @@ impl ApiFeed for BinanceFeed {
         self
     }
     
-    fn system_status(&self) -> &ApiRequest {
-        self.loader.get_endpoint("system_status")
+    fn system_status(&self) -> String {
+        let mut request = self.loader.get_endpoint("system_status");
+        request.add_param(String::from("test"), String::from("value"));
+        
+        request.get_param_payload()
     }
 
-    fn coins_info(&self) -> &ApiRequest {
-        self.loader.get_endpoint("coins_info")
+    fn coins_info(&self) -> String {
+        //self.loader.get_endpoint("coins_info")
+        String::from("")
+    }
+
+    fn depth(&self) -> String
+    {
+        //self.loader.get_endpoint("depth")
+        String::from("")
     }
 }
