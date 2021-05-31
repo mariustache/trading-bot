@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use log::{info};
 
 extern crate common;
-use common::api_feed::ApiFeed;
+use common::api_feed::{ApiFeed, SecurityType};
 use common::config::ConfigLoader;
 use common::utils::get_env;
 
@@ -53,10 +53,9 @@ impl ApiFeed for BinanceFeed {
     }
     
     fn system_status(&self) -> String {
-        let mut request = self.loader.get_endpoint("system_status");
-        request.add_param(String::from("test"), String::from("value"));
+        let request = self.loader.get_endpoint("system_status");
         
-        request.get_param_payload()
+        request.get_payload()
     }
 
     fn coins_info(&self) -> String {
@@ -64,9 +63,14 @@ impl ApiFeed for BinanceFeed {
         String::from("")
     }
 
-    fn depth(&self) -> String
-    {
-        //self.loader.get_endpoint("depth")
-        String::from("")
+    fn depth(&self, symbol: &String) -> String {
+        let mut request = self.loader.get_endpoint("depth");
+        request.set_param(&String::from("symbol"), symbol);
+        
+        if request.security == SecurityType::SIGNED {
+            request.get_signed_payload(&self.secret_key)
+        } else {
+            request.get_payload()
+        }
     }
 }

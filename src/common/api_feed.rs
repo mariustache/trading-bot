@@ -1,7 +1,10 @@
 use std::fmt;
 use std::any::Any;
+use log::{error};
 
-#[derive(Debug, Clone)]
+use crate::utils::sign;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SecurityType {
     NONE = 0,
     APIKEY,
@@ -21,12 +24,20 @@ pub struct ApiRequest {
 }
 
 impl ApiRequest {
-    pub fn add_param(&mut self, name: String, value: String) {
-        self.parameters.push((name, value));
+    pub fn set_param(&mut self, name: &String, value: &String) {
+        for index in 0..self.parameters.len() {
+            if &self.parameters[index].0 == name {
+                self.parameters[index].1 = value.clone();
+                break;
+            } else {
+                error!("Parameter {} is not defined in api.", name);
+            }
+        }
     }
 
+    // Create parameters payload without base url or signature.
     pub fn get_param_payload(&self) -> String {
-        let mut payload = String::from(&self.url);
+        let mut payload = String::from("");
         let mut param_str: Vec<String> = Vec::new();
         // Add parameters to payload.
         if !self.parameters.is_empty() {
@@ -36,6 +47,29 @@ impl ApiRequest {
             }
             payload = payload + &param_str.join("&");
         }
+
+        payload
+    }
+
+    // Create full payload.
+    pub fn get_payload(&self) -> String {
+        let mut payload = String::from(&self.url);
+        payload.push_str(&self.get_param_payload());
+
+        payload
+    }
+
+    // Create full signed payload.
+    pub fn get_signed_payload(&self, secret_key: &String) -> String {
+        assert_eq!(self.security, SecurityType::SIGNED);
+        let mut payload = String::from(&self.url);
+        let params_payload = self.get_param_payload();
+        payload.push_str(&params_payload);
+
+        // Sign payload and add signature to payload.
+        let signature = sign(secret_key, &params_payload);
+        let signature = format!("&signature={}", signature);
+        payload.push_str(&signature);
 
         payload
     }
@@ -56,5 +90,5 @@ pub trait ApiFeed {
     fn as_any(&self) -> &dyn Any;
     fn system_status(&self) -> String;
     fn coins_info(&self) -> String;
-    fn depth(&self) -> String;
+    fn depth(&self, symbol: &String) -> String;
 }
