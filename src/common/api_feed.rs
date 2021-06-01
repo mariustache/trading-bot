@@ -23,6 +23,12 @@ pub struct ApiRequest {
     pub parameters: EndpointParams,
 }
 
+#[derive(Debug)]
+pub struct HttpPayload {
+    pub payload: String,
+    pub api_key: String
+}
+
 impl ApiRequest {
     pub fn set_param(&mut self, name: &String, value: &String) {
         for index in 0..self.parameters.len() {
@@ -88,7 +94,34 @@ impl fmt::Debug for ApiRequest {
 
 pub trait ApiFeed {
     fn as_any(&self) -> &dyn Any;
-    fn system_status(&self) -> String;
-    fn coins_info(&self) -> String;
-    fn depth(&self, symbol: &String) -> String;
+    fn system_status(&self) -> HttpPayload;
+    fn ping(&self) -> HttpPayload;
+    fn coins_info(&self) -> HttpPayload;
+    fn depth(&self, symbol: &String) -> HttpPayload;
+
+    fn get_payload(&self, request: &ApiRequest, secret: &String, public: &String) -> HttpPayload {
+        let mut payload = String::from("");
+        let mut api_key = public.to_string();
+
+        match request.security {
+            SecurityType::NONE => {
+                payload = request.get_payload();
+                api_key = String::from("");
+            },
+            SecurityType::APIKEY => {
+                payload = request.get_payload();
+            },
+            SecurityType::SIGNED => {
+                payload = request.get_signed_payload(secret);
+            },
+            SecurityType::INVALID => {
+                error!("Security type is invalid.");
+            }
+        }
+
+        HttpPayload {
+            payload,
+            api_key
+        }
+    }
 }

@@ -10,7 +10,14 @@ endpoints:
       security: NONE
       weight: "1"
       parameters:
-
+    
+    ping:
+      method: GET
+      endpoint: /api/v3/ping
+      security: NONE
+      weight: "1"
+      parameters:
+        
     coins_info: 
       method: GET
       endpoint: /sapi/v1/capital/config/getall

@@ -16,10 +16,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
     let feed = BinanceFeed::new();
-    let client = HttpClient::new();
     info!("{:?}", feed.system_status());
     info!("{:?}", feed.depth(&String::from("BTCUSDT")));
-    let res = client.send(feed.system_status()).await?;
+    let client = HttpClient::new();
+    let res = client.get(feed.ping()).await?;
     info!("{:?}", res.text().await?);
     let binance_feed: &BinanceFeed = 
         match feed.as_any().downcast_ref::<BinanceFeed>() {
