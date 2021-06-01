@@ -97,7 +97,7 @@ pub trait ApiFeed {
     fn system_status(&self) -> HttpPayload;
     fn ping(&self) -> HttpPayload;
     fn coins_info(&self) -> HttpPayload;
-    fn depth(&self, symbol: &String) -> HttpPayload;
+    fn depth(&self, symbol: &str) -> HttpPayload;
 
     fn get_payload(&self, request: &ApiRequest, secret: &String, public: &String) -> HttpPayload {
         let mut payload = String::from("");

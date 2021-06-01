@@ -19,7 +19,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     info!("{:?}", feed.system_status());
     info!("{:?}", feed.depth(&String::from("BTCUSDT")));
     let client = HttpClient::new();
-    let res = client.get(feed.ping()).await?;
+    let res = client.get(feed.depth("BTCUSDT")).await?;
     info!("{:?}", res.text().await?);
     let binance_feed: &BinanceFeed = 
         match feed.as_any().downcast_ref::<BinanceFeed>() {

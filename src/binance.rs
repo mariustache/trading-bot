@@ -70,9 +70,10 @@ impl ApiFeed for BinanceFeed {
         self.get_payload(&request, &self.secret_key, &self.public_key)
     }
 
-    fn depth(&self, symbol: &String) -> HttpPayload {
+    fn depth(&self, symbol: &str) -> HttpPayload {
         let mut request = self.loader.get_endpoint("depth");
-        request.set_param(&String::from("symbol"), symbol);
+        request.set_param(&"symbol".to_string(), &symbol.to_string());
+        request.set_param(&"limit".to_string(), &"100".to_string());
         
         self.get_payload(&request, &self.secret_key, &self.public_key)
     }
